@@ -84,5 +84,5 @@ MRL-270-44    ECEB-4022-DS01  130.126.29.84                                     
 ```
 
 # Notes
-- By mseng3
+- By mseng3. See my other projects here: https://github.com/mmseng/code-compendium.
 - Test-ConnectionAsync by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b

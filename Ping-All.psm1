@@ -3,13 +3,21 @@
 # By mseng3
 function global:Ping-All {
 	param(
-		[string]$Query,
+		[Parameter(Position=0,Mandatory=$true)]
+		[string]$Computers,
+		
+		[string]$OUDN = "OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
+		
 		[int]$Count = 4,
+		
 		[switch]$Verbose
 	)
 	
-	# Sorting likely won't have an actual effect because the pings are asynchrounous and responses are output as soon as they're received
-	$comps = (Get-ADComputer -Filter { Name -like $query }).Name | Sort
+	$comps = @()
+	foreach($query in @($Computers)) {
+		$thisQueryComps = (Get-ADComputer -Filter "name -like '$query'" -SearchBase $OUDN | Select Name).Name
+		$comp += @($thisQueryComps)
+	}
 	
 	# Test-ConnectionAsync is a custom module by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b
 	# You'll need to download it and customize the path below

@@ -1,17 +1,15 @@
 # Overview
 Ping-All is a PowerShell module to allow you to ping multiple computers with a single command, asynchronously. This is useful when checking multiple similarly-named computers (e.g. computers located in the same lab) as a quick check to see what's online and responding to ping. The asynchronous nature of the command also makes this run quickly, not allowing unresponsive computers to hold up pinging other computers in the list.
 
-# Setup and Requirements
-`Test-ConnectionAsync.psm1` is a prerequisite to `Ping-All.psm1`. Both of these are also built as PowerShell modules, so they must be imported before use.
-
-Open a PowerShell window and navigate to the location where these modules are stored, then run the following:
-```
-Import-Module .\Test-ConnectionAsync.psm1
-Import-Module .\Ping-All.psm1
-```
+# Requirements
+`Test-ConnectionAsync.psm1` is a prerequisite to `Ping-All.psm1`. Both of these are built as PowerShell modules, so they must be imported before use.
 
 # Usage
-`Ping-All [[-Query] <string>] [[-Count] <int>] [-Verbose]`
+1. Download `Test-ConnectionAsync.psm1` and `Ping-All.psm1`.
+2. Import the modules:
+- `Import-Module "c:\path\to\Test-ConnectionAsync.psm1"'
+- `Import-Module "c:\path\to\Ping-All.psm1"`
+3. Run it: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
 
 ## Examples
 ### Example 1
@@ -43,7 +41,7 @@ ECEB-4022...   False
 ### Example 2
 A more detailed command, where we ping the same computers in Example 1, but also do it twice and add the Verbose flag
 ```
-Ping-All -Query "eceb-4022-*" -Count 2 -Verbose
+Ping-All -Computers "eceb-4022-*" -Count 2 -Verbose
 
 Source        Destination     IPV4Address      IPV6Address                              Bytes    Time(ms)
 ------        -----------     -----------      -----------                              -----    --------

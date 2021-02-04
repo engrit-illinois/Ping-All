@@ -4,7 +4,7 @@
 function global:Ping-All {
 	param(
 		[Parameter(Position=0,Mandatory=$true)]
-		[string]$Computers,
+		[string[]]$Computers,
 		
 		[string]$OUDN = "OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		

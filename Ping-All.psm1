@@ -16,7 +16,7 @@ function global:Ping-All {
 	$comps = @()
 	foreach($query in @($Computers)) {
 		$thisQueryComps = (Get-ADComputer -Filter "name -like '$query'" -SearchBase $OUDN | Select Name).Name
-		$comp += @($thisQueryComps)
+		$comps += @($thisQueryComps)
 	}
 	
 	# Test-ConnectionAsync is a custom module by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b

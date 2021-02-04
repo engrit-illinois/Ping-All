@@ -1,13 +1,10 @@
 # Overview
 Ping-All is a PowerShell module to allow you to ping multiple computers with a single command, asynchronously. This is useful when checking multiple similarly-named computers (e.g. computers located in the same lab) as a quick check to see what's online and responding to ping. The asynchronous nature of the command also makes this run quickly, not allowing unresponsive computers to hold up pinging other computers in the list.
 
-# Requirements
-`Test-ConnectionAsync.psm1` is a prerequisite to `Ping-All.psm1`. Both of these are built as PowerShell modules, so they must be imported before use.
-
 # Usage
 1. Download `Test-ConnectionAsync.psm1` and `Ping-All.psm1`.
 2. Import the modules:
-- `Import-Module "c:\path\to\Test-ConnectionAsync.psm1"'
+- `Import-Module "c:\path\to\Test-ConnectionAsync.psm1"`
 - `Import-Module "c:\path\to\Ping-All.psm1"`
 3. Run it: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
 

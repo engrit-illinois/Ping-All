@@ -10,7 +10,7 @@ function global:Ping-All {
 		
 		[int]$Count = 4,
 		
-		[switch]$Verbose
+		[switch]$Detailed
 	)
 	
 	$comps = @()
@@ -25,7 +25,7 @@ function global:Ping-All {
 	
 	if(Get-Module -Name "Test-ConnectionAsync") {
 		# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
-		if($Verbose) {
+		if($Detailed) {
 			$comps | Test-ConnectionAsync -Count $count | Format-Table
 		}
 		else {

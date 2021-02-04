@@ -11,6 +11,26 @@ Ping-All is a PowerShell module to allow you to ping multiple computers with a s
 - `Import-Module "c:\path\to\Ping-All.psm1"`
 3. Run it: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
 
+# Parameters
+
+### -Computers
+Required string array of computer names or wildcard computer name queries.  
+
+### -OUDN
+Optional string.  
+The distinguished name of the OU to limit the computer name search.  
+Default is `OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu`.  
+
+### -Count
+Optional integer.  
+The number of times to ping machines.  
+Machines which respond to at least one ping will be considered a success.  
+
+### -Detailed
+Optional switch.  
+Also outputs additional info about each computer pinged.  
+See examples below.  
+
 ## Examples
 ### Example 1
 A simple request to ping all computers with names starting with a certain string of characters
@@ -41,7 +61,7 @@ ECEB-4022...   False
 ### Example 2
 A more detailed command, where we ping the same computers in Example 1, but also do it twice and add the Verbose flag
 ```
-Ping-All -Computers "eceb-4022-*" -Count 2 -Verbose
+Ping-All -Computers "eceb-4022-*" -Count 2 -Detailed
 
 Source        Destination     IPV4Address      IPV6Address                              Bytes    Time(ms)
 ------        -----------     -----------      -----------                              -----    --------

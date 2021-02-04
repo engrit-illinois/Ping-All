@@ -6,7 +6,7 @@ Ping-All is a PowerShell module to allow you to ping multiple computers with a s
 2. Import the modules:
 - `Import-Module "c:\path\to\Test-ConnectionAsync.psm1"`
 - `Import-Module "c:\path\to\Ping-All.psm1"`
-3. Run it: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
+3. Run it, e.g.: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
 
 # Parameters
 

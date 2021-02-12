@@ -26,10 +26,10 @@ function global:Ping-All {
 	if(Get-Module -Name "Test-ConnectionAsync") {
 		# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
 		if($Detailed) {
-			$comps | Test-ConnectionAsync -Count $count | Format-Table
+			$comps | Test-ConnectionAsync -Count $count | Format-Table -AutoSize
 		}
 		else {
-			$comps | Test-ConnectionAsync -Count $count -Quiet | Format-Table
+			$comps | Test-ConnectionAsync -Count $count -Quiet | Format-Table -AutoSize
 		}
 	}
 	else {

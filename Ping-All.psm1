@@ -1,7 +1,7 @@
 # Handy function to asynchronously ping all computers that match a wildcard name query
 # Documentation home: https://github.com/engrit-illinois/Ping-All
 # By mseng3
-function global:Ping-All {
+function Ping-All {
 	param(
 		[Parameter(Position=0,Mandatory=$true)]
 		[string[]]$Computers,
@@ -19,20 +19,24 @@ function global:Ping-All {
 		$comps += @($thisQueryComps)
 	}
 	
-	# Test-ConnectionAsync is a custom module by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b
-	# You'll need to download it and customize the path below
-	#Import-Module -Name ".\Test-ConnectionAsync.psm1" -Force
-	
-	if(Get-Module -Name "Test-ConnectionAsync") {
-		# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
-		if($Detailed) {
-			$comps | Test-ConnectionAsync -Count $count | Format-Table -AutoSize
+	if($comps) {
+		# Test-ConnectionAsync is a custom module by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b
+		# You'll need to download and import it
+				
+		if(Get-Module -Name "Test-ConnectionAsync") {
+			# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
+			if($Detailed) {
+				$comps | Test-ConnectionAsync -Count $count | Format-Table -AutoSize
+			}
+			else {
+				$comps | Test-ConnectionAsync -Count $count -Quiet | Format-Table -AutoSize
+			}
 		}
 		else {
-			$comps | Test-ConnectionAsync -Count $count -Quiet | Format-Table -AutoSize
+			Write-Host "Test-ConnectionAsync module is not installed."
 		}
 	}
 	else {
-		Write-Host "Test-ConnectionAsync module is not installed."
+		Write-Host "No matching AD computers found!"
 	}
 }

@@ -20,20 +20,32 @@ function Ping-All {
 	}
 	
 	if($comps) {
-		# Test-ConnectionAsync is a custom module by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b
-		# You'll need to download and import it
-				
-		if(Get-Module -Name "Test-ConnectionAsync") {
-			# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
-			if($Detailed) {
-				$comps | Test-ConnectionAsync -Count $count | Format-Table -AutoSize
+		
+		$params = @{
+			Count = $count
+			Quiet = $true
+		}
+		
+		if($Detailed) {
+			$params.Quiet = $false
+		}
+		
+		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
+		if((Get-Host).Version.Major -ge 7) {
+			$comps | ForEach-Object { Test-Connection @params | Format-Table -AutoSize }
+		}
+		# Powershell 5.1 requires more code
+		else {
+			# Test-ConnectionAsync is a custom module by David Wyatt: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b
+			# You'll need to download and import it
+					
+			if(Get-Module -Name "Test-ConnectionAsync") {
+				# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
+				$comps | Test-ConnectionAsync @params | Format-Table -AutoSize
 			}
 			else {
-				$comps | Test-ConnectionAsync -Count $count -Quiet | Format-Table -AutoSize
+				Write-Host "Test-ConnectionAsync module is not installed."
 			}
-		}
-		else {
-			Write-Host "Test-ConnectionAsync module is not installed."
 		}
 	}
 	else {

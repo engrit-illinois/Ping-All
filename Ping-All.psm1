@@ -36,9 +36,9 @@ function Ping-All {
 		if((Get-Host).Version.Major -ge 7) {
 			$script = {
 				$params = $using:params
-				Test-Connection -TargetName $_ @params | Format-Table -AutoSize
+				Test-Connection -TargetName $_ @params
 			}
-			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script
+			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script | Format-Table -AutoSize
 		}
 		# Powershell 5.1 requires more code
 		else {

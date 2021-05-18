@@ -32,7 +32,7 @@ function Ping-All {
 		
 		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
 		if((Get-Host).Version.Major -ge 7) {
-			$comps | ForEach-Object { Test-Connection -ComputerName $_ @params | Format-Table -AutoSize }
+			$comps | ForEach-Object { Test-Connection -TargetName $_ @params | Format-Table -AutoSize }
 		}
 		# Powershell 5.1 requires more code
 		else {

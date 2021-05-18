@@ -35,12 +35,10 @@ function Ping-All {
 		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
 		if((Get-Host).Version.Major -ge 7) {
 			$script = {
-				param(
-					$params
-				)
+				$params = $using:params
 				Test-Connection -TargetName $_ @params | Format-Table -AutoSize
 			}
-			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script -ArgumentList $params
+			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script
 		}
 		# Powershell 5.1 requires more code
 		else {

@@ -49,8 +49,7 @@ function Ping-All {
 			# You'll need to download and import it
 					
 			if(Get-Module -Name "Test-ConnectionAsync") {
-				# Each line must be immediately sent to Format-Table (instead of saving to a variable first) to take advantage of the asynchronicity
-				$comps | Test-ConnectionAsync @params | Format-Table -AutoSize
+				$comps | Test-ConnectionAsync @params
 			}
 			else {
 				Write-Host "Test-ConnectionAsync module is not installed."

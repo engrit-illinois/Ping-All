@@ -4,7 +4,7 @@ Ping-All is a PowerShell module to allow you to ping multiple computers with a s
 # Usage
 1. Download `Ping-All.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\Ping-All\Ping-All.psm1`.
 2. If using Powershell older than v7, then also download [Test-ConnectionAsync.psm1](https://www.powershellgallery.com/packages/TestConnectionAsync/1.0.0.1) to `$HOME\Documents\WindowsPowerShell\Modules\Test-ConnectionAsync\Test-ConnectionAsync.psm1`.
-  - Test-ConnectionAsync is by David Wyatt. Use the link above to download from the original source. A copy is kept in this repo in case it becomes unavailable.
+    - Test-ConnectionAsync is by David Wyatt. Use the link above to download from the original source. A copy is kept in this repo in case it becomes unavailable.
 3. Run it, e.g.: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
 
 # Parameters

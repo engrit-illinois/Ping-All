@@ -41,7 +41,7 @@ function Ping-All {
 					Success = (Test-Connection -TargetName $_ @params)
 				}
 			}
-			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script | Format-Table -AutoSize
+			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script
 		}
 		# Powershell 5.1 requires more code
 		else {

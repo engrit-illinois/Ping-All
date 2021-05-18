@@ -36,7 +36,10 @@ function Ping-All {
 		if((Get-Host).Version.Major -ge 7) {
 			$script = {
 				$params = $using:params
-				Test-Connection -TargetName $_ @params
+				[PSCustomObject]@{
+					TargetName = $_
+					Success = (Test-Connection -TargetName $_ @params)
+				}
 			}
 			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script | Format-Table -AutoSize
 		}

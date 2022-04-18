@@ -10,17 +10,25 @@ function Ping-All {
 		
 		[int]$Count = 4,
 		
-		[int]$ThrottleLimit = 100
+		[int]$ThrottleLimit = 100,
+		
+		[switch]$Format
 	)
 	
-	$comps = @()
-	foreach($query in @($Computers)) {
-		$thisQueryComps = (Get-ADComputer -Filter "name -like '$query'" -SearchBase $OUDN | Select Name).Name
-		$comps += @($thisQueryComps)
+	function log($msg) {
+		Write-Host $msg
 	}
 	
-	if($comps) {
-		
+	function Get-Comps {
+		$comps = @()
+		foreach($query in @($Computers)) {
+			$thisQueryComps = (Get-ADComputer -Filter "name -like '$query'" -SearchBase $OUDN | Select Name).Name
+			$comps += @($thisQueryComps)
+		}
+		$comps
+	}
+	
+	function Get-Results($comps) {			
 		$params = @{
 			Count = $Count
 			Quiet = $true
@@ -46,11 +54,42 @@ function Ping-All {
 				$comps | Test-ConnectionAsync @params
 			}
 			else {
-				Write-Host "Test-ConnectionAsync module is not installed."
+				log "Test-ConnectionAsync module is not installed."
 			}
 		}
 	}
-	else {
-		Write-Host "No matching AD computers found!"
+	
+	function Format-Results($results) {
+		# Note: The Test-Connection cmdlet in v5.1 (used by Test-ConnectionAsync in this case) returns a "ComputerName" property, while later versions return a "TargetName" property.
+		if((Get-Host).Version.Major -ge 7) {
+			$results = $results | Sort TargetName
+		}
+		else {
+			$results = $results | Sort ComputerName
+		}		
+		$results | Format-Table -AutoSize
 	}
+	
+	function Do-Stuff {
+		$comps = Get-Comps
+		if($comps) {
+			if($Format) {
+				$results = Get-Results $comps
+				if($results) {
+					Format-Results $results
+				}
+				else {
+					log "No results were returned!"
+				}
+			}
+			else {
+				Get-Results $comps
+			}
+		}
+		else {
+			log "No matching AD computers found!"
+		}
+	}
+	
+	Do-Stuff
 }

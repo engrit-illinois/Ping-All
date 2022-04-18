@@ -29,6 +29,11 @@ Only relevant when using Powershell 7 or greater.
 The maximum number of async calls to make simultaneously.  
 Default is `100`.  
 
+### -Format
+Optional switch.  
+The default behavior is to allow the parallelized pipeline to return the results as they are received. This populates the table returned in real time, which may be desirable, but which will likely cause the results to be returned out of alphanumeric order, and names later in the list may be truncated, if they are longer than the first name returned.  
+Specifying `-Format` causes all of the output to be captured, sorted by the computer name, and the table columns auto-sized (to avoid the truncation issue). The downside of this is that it must wait for all results to be received before doing this, so the "real-time" nature is somewhat diminished.  
+
 ## Example
 A simple request to ping all computers with names starting with a certain string of characters
 ```
@@ -60,3 +65,4 @@ ECEB-4022-17   False
 - Test-ConnectionAsync by David Wyatt:
   - Originally at: https://gallery.technet.microsoft.com/scriptcenter/Multithreaded-PowerShell-0bc3f59b
   - More recently found at: https://www.powershellgallery.com/packages/TestConnectionAsync/1.0.0.1
+- If using PowerShell versions older than 7, the computer name property of the returned object is named `ComputerName`. In version 7 or later is is named `TargetName`. This is just how the underlying `Test-Connection` cmdlet works in these versions.

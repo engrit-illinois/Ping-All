@@ -32,7 +32,7 @@ Default is `100`.
 ### -Format
 Optional switch.  
 The default behavior is to allow the parallelized pipeline to return the results as they are received. This populates the table returned in real time, which may be desirable, but which will likely cause the results to be returned out of alphanumeric order, and names later in the list may be truncated, if they are longer than the first name returned.  
-Specifying `-Format` causes all of the output to be captured, sorted by the computer name, and the table columns auto-sized (to avoid the truncation issue). The downside of this is that it must wait for all results to be received before doing this, so the "real-time" nature is somewhat diminished.  
+Specifying `-Format` causes all of the output to be captured, sorted by the computer name, and the table columns auto-sized (to avoid the truncation issue). The downside of this is that it must wait for all results to be received before doing this, so the "real-time" nature is somewhat diminished. As a result you won't get any results until all pings are complete, which may take a while if some of the machines don't respond.  
 
 ## Example
 A simple request to ping all computers with names starting with a certain string of characters

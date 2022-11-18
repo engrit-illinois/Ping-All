@@ -31,16 +31,28 @@ function Ping-All {
 	function Get-Results($comps) {			
 		$params = @{
 			Count = $Count
-			Quiet = $true
 		}
 		
 		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
 		if((Get-Host).Version.Major -ge 7) {
 			$script = {
 				$params = $using:params
+				
+				try {
+					$result = Test-Connection -TargetName $_ @params -ErrorAction "Stop"
+					$status = $result | Select -ExpandProperty "Status" 
+					$ip = $result | Select -ExpandProperty "Address" | Select -ExpandProperty "IPAddressToString" | Select -First 1
+					$err = "None"
+				}
+				catch {
+					$err = $_.Exception.Message
+				}
+				
 				[PSCustomObject]@{
 					TargetName = $_
-					Success = (Test-Connection -TargetName $_ @params)
+					Status = $status
+					Ip = $ip
+					Error = $err
 				}
 			}
 			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script
@@ -51,7 +63,7 @@ function Ping-All {
 			# You'll need to download and import it
 					
 			if(Get-Module -Name "Test-ConnectionAsync") {
-				$comps | Test-ConnectionAsync @params
+				$comps | Test-ConnectionAsync -Quiet @params
 			}
 			else {
 				log "Test-ConnectionAsync module is not installed."

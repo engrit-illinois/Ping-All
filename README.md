@@ -28,10 +28,11 @@ Optional integer.
 The version IP protocol version to use.  
 Valid values are `4` and `6`.  
 Default is `4`.  
+Only supported on Powershell 7+. Earlier versions ignore this parameter.  
 
 ### -ThrottleLimit \<int\>
 Optional integer.  
-Only relevant when using Powershell 7 or greater.  
+Only relevant when using Powershell 7+.  
 The maximum number of async calls to make simultaneously.  
 Default is `100`.  
 

@@ -12,6 +12,9 @@ function Ping-All {
 		
 		[int]$ThrottleLimit = 100,
 		
+		[ValidateSet(4,6)]
+		[int]$IpVersion = 4,
+		
 		[switch]$Format
 	)
 	
@@ -31,6 +34,7 @@ function Ping-All {
 	function Get-Results($comps) {			
 		$params = @{
 			Count = $Count
+			ErrorAction = "Stop"
 		}
 		
 		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
@@ -39,7 +43,13 @@ function Ping-All {
 				$params = $using:params
 				
 				try {
-					$result = Test-Connection -TargetName $_ @params -ErrorAction "Stop"
+					if($IpVersion -eq 6) {
+						$result = Test-Connection -TargetName $_ -IPv6 @params
+					}
+					else {
+						$result = Test-Connection -TargetName $_ -IPv4 @params
+					}
+					
 					$status = $result | Select -ExpandProperty "Status" 
 					$ip = $result | Select -ExpandProperty "Address" | Select -ExpandProperty "IPAddressToString" | Select -First 1
 					$err = "None"

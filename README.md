@@ -9,21 +9,27 @@ Ping-All is a PowerShell module to allow you to ping multiple computers with a s
 
 # Parameters
 
-### -Computers
+### -Computers \<string[]\>
 Required string array of computer names or wildcard computer name queries.  
 
-### -OUDN
+### -OUDN \<string\>
 Optional string.  
 The distinguished name of the OU to limit the computer name search.  
 Default is `OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu`.  
 
-### -Count
+### -Count \<int\>
 Optional integer.  
 The number of times to ping machines.  
 Machines which respond to at least one ping will be considered a success.  
 Default is `4`.  
 
-### -ThrottleLimit
+### -IpVersion \<int\>
+Optional integer.  
+The version IP protocol version to use.  
+Valid values are `4` and `6`.  
+Default is `4`.  
+
+### -ThrottleLimit \<int\>
 Optional integer.  
 Only relevant when using Powershell 7 or greater.  
 The maximum number of async calls to make simultaneously.  

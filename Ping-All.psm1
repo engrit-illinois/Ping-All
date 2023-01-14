@@ -10,10 +10,10 @@ function Ping-All {
 		
 		[int]$Count = 4,
 		
-		[int]$ThrottleLimit = 100,
-		
-		[ValidateSet(4,6)]
+		[ValidateScript({($_ -eq 4) -or ($_ -eq 6)})]
 		[int]$IpVersion = 4,
+		
+		[int]$ThrottleLimit = 100,
 		
 		[switch]$Format
 	)
@@ -41,9 +41,11 @@ function Ping-All {
 		if((Get-Host).Version.Major -ge 7) {
 			$script = {
 				$params = $using:params
+				$IpVersion = $using:IpVersion
 				
 				try {
 					if($IpVersion -eq 6) {
+					#if($true) {
 						$result = Test-Connection -TargetName $_ -IPv6 @params
 					}
 					else {

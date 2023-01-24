@@ -28,7 +28,7 @@ Optional integer.
 The version IP protocol version to use.  
 Valid values are `4` and `6`.  
 Default is `4`.  
-Only supported on Powershell 7+. Earlier versions ignore this parameter, due to the use of the custom `Test-ConnectionAsync` module. So behavior will be different in Powershell 5.1. I can't be bothered to account for this and make `Ping-All` behave the same for both Powershell versions, as I really only care about Powershell 7 compatibility at this point. If you really want to know how `Test-ConnectionAsync` will behavoe you can look at its code. Otherwise just use Powershell 7. From what I can tell `Test-ConnectionAsync` tests both IPv4 and IPv6 (if available).  
+Only supported on Powershell 7+. Earlier versions ignore this parameter, due to the use of the custom `Test-ConnectionAsync` module. So behavior will be different in Powershell 5.1. I can't be bothered to account for this and make `Ping-All` behave the same for both Powershell versions, as I really only care about Powershell 7 compatibility at this point. If you really want to know how `Test-ConnectionAsync` will behave you can look at its code. Otherwise just use Powershell 7. From what I can tell `Test-ConnectionAsync` tests both IPv4 and IPv6 (if available).  
 
 ### -ThrottleLimit \<int\>
 Optional integer.  

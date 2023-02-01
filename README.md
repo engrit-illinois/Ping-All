@@ -1,5 +1,7 @@
 # Overview
-Ping-All is a PowerShell module to allow you to ping multiple computers with a single command, asynchronously. This is useful when checking multiple similarly-named computers (e.g. computers located in the same lab) as a quick check to see what's online and responding to ping. The asynchronous nature of the command also makes this run quickly, not allowing unresponsive computers to hold up pinging other computers in the list.
+Ping-All is a PowerShell module to allow you to ping multiple computers with a single command, asynchronously. This is useful when checking multiple similarly-named computers (e.g. computers located in the same lab) as a quick check to see what's online and responding to ping.  
+
+In the process of upgrading the script to work with IPv6 I removed the ability for it to asynchronously output results as they are gathered. Machines are still pinged asynchronously, but if any machines are offline, the full output will be delayed until pings to those machines time out. I plan to add the full asynchronous behavior back in once I research how to do it properly.  
 
 # Usage
 1. Download `Ping-All.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
@@ -36,36 +38,29 @@ Only relevant when using Powershell 7+.
 The maximum number of async calls to make simultaneously.  
 Default is `100`.  
 
-### -Format
+### -PassThru
 Optional switch.  
-The default behavior is to allow the parallelized pipeline to return the results as they are received. This populates the table returned in real time, which may be desirable, but which will likely cause the results to be returned out of alphanumeric order, and names later in the list may be truncated, if they are longer than the first name returned.  
-Specifying `-Format` causes all of the output to be captured, sorted by the computer name, and the table columns auto-sized (to avoid the truncation issue). The downside of this is that it must wait for all results to be received before doing this, so the "real-time" nature is somewhat diminished. As a result you won't get any output until all pings are complete, which may take a while if some of the machines don't respond.  
-Specifying the `-Format` parameter is exactly the same as omitting it and piping the command to ` | Sort TargetName | Format-Table -AutoSize` (for PowerShell v7+), or ` | Sort ComputerName | Format-Table -AutoSize` (for PowerShell v5.1).  
+By default the module returns a formatted table of the results after pinging all of the computers.  
+When `-PassThru` is specified, the raw, unformatted results are returned, and will likely be in `List` format.  
 
 ## Example
 A simple request to ping all computers with names starting with a certain string of characters
 ```
-Ping-All "eceb-4022-*"
+Ping-All dcl-l426-*
 
-ComputerName Success
------------- -------
-ECEB-4022-01    True
-ECEB-4022-02    True
-ECEB-4022-03    True
-ECEB-4022-04    True
-ECEB-4022-05    True
-ECEB-4022-06    True
-ECEB-4022-07    True
-ECEB-4022-08    True
-ECEB-4022-09    True
-ECEB-4022-10    True
-ECEB-4022-11    True
-ECEB-4022-12    True
-ECEB-4022-13    True
-ECEB-4022-14    True
-ECEB-4022-15    True
-ECEB-4022-16    True
-ECEB-4022-17   False
+TargetName  IPv4_IP        IPv4_Status                              IPv4_Error IPv6_IP                             IPv6_Status                                                                                                      IPv6_Error
+----------  -------        -----------                              ---------- -------                             -----------                                                                                                      ----------
+DCL-L426-01 130.126.246.2  {Success, Success, Success, Success}     None       2620:0:e00:550f:aeba:f341:6b8f:a41f {Success, Success, Success, Success}                                                                             None
+DCL-L426-02 130.126.246.3  {Success, Success, Success, Success}     None       2620:0:e00:550f:c00a:cb8a:4330:26cf {Success, Success, Success, Success}                                                                             None
+DCL-L426-03 130.126.246.4  {Success, Success, Success, Success}     None       2620:0:e00:550f:6ded:2681:376c:2348 {Success, Success, Success, Success}                                                                             None
+DCL-L426-04                {TimedOut, TimedOut, TimedOut, TimedOut} None                                           {DestinationHostUnreachable, DestinationHostUnreachable, DestinationHostUnreachable, DestinationHostUnreachable} None
+DCL-L426-05                {TimedOut, TimedOut, TimedOut, TimedOut} None                                           {DestinationHostUnreachable, DestinationHostUnreachable, DestinationHostUnreachable, DestinationHostUnreachable} None
+DCL-L426-06 130.126.246.7  {Success, Success, Success, Success}     None       2620:0:e00:550f:2575:8fb:35a7:39a4  {Success, Success, Success, Success}                                                                             None
+DCL-L426-07 130.126.246.8  {Success, Success, Success, Success}     None       2620:0:e00:550f:7a16:74cc:2cdf:7b0e {Success, Success, Success, Success}                                                                             None
+DCL-L426-08 130.126.246.9  {Success, Success, Success, Success}     None       2620:0:e00:550f:1a85:4472:8d5d:c92a {Success, Success, Success, Success}                                                                             None
+DCL-L426-09 130.126.246.10 {Success, Success, Success, Success}     None       2620:0:e00:550f:f9a8:6fdc:f911:9528 {Success, Success, Success, Success}                                                                             None
+DCL-L426-10 130.126.246.11 {Success, Success, Success, Success}     None       2620:0:e00:550f:7da2:7a9d:1ba4:567d {Success, Success, Success, Success}                                                                             None
+DCL-L426-11 130.126.246.13 {Success, Success, Success, Success}     None       2620:0:e00:550f:37cb:8c56:b742:a8aa {Success, Success, Success, Success}                                                                             None
 ```
 
 # Notes

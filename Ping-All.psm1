@@ -10,12 +10,12 @@ function Ping-All {
 		
 		[int]$Count = 4,
 		
-		[ValidateScript({($_ -eq 4) -or ($_ -eq 6)})]
-		[int]$IpVersion = 4,
+		[ValidateScript({($_ -eq "4") -or ($_ -eq "6") -or ($_ -eq "Both")})]
+		[string]$IpVersion = "Both",
 		
-		[int]$ThrottleLimit = 100,
+		[switch]$PassThru,
 		
-		[switch]$Format
+		[int]$ThrottleLimit = 100
 	)
 	
 	function log($msg) {
@@ -27,6 +27,9 @@ function Ping-All {
 		foreach($query in @($Computers)) {
 			$thisQueryComps = (Get-ADComputer -Filter "name -like '$query'" -SearchBase $OUDN | Select Name).Name
 			$comps += @($thisQueryComps)
+		}
+		if(-not $comps) {
+			log "No matching AD computers found!"
 		}
 		$comps
 	}
@@ -40,33 +43,51 @@ function Ping-All {
 		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
 		if((Get-Host).Version.Major -ge 7) {
 			$script = {
+				function addm($property, $value, $object) {
+					$object | Add-Member -NotePropertyName $property -NotePropertyValue $value
+					$object
+				}
+				
 				$params = $using:params
 				$IpVersion = $using:IpVersion
 				
-				try {
-					if($IpVersion -eq 6) {
-					#if($true) {
-						$result = Test-Connection -TargetName $_ -IPv6 @params
-					}
-					else {
-						$result = Test-Connection -TargetName $_ -IPv4 @params
-					}
-					
-					$status = $result | Select -ExpandProperty "Status" 
-					$ip = $result | Select -ExpandProperty "Address" | Select -ExpandProperty "IPAddressToString" | Select -First 1
-					$err = "None"
-				}
-				catch {
-					$err = $_.Exception.Message
+				$results = [PSCustomObject]@{
+					TargetName = $_
 				}
 				
-				[PSCustomObject]@{
-					TargetName = $_
-					Status = $status
-					Ip = $ip
-					Error = $err
+				if(($IpVersion -eq "4") -or ($IpVersion -eq "Both")) {
+					$err4 = "None"
+					try {
+						$result4 = Test-Connection -TargetName $_ -IPv4 @params
+					}					
+					catch {
+						$err4 = $_.Exception.Message
+					}
+					$status4 = $result4 | Select -ExpandProperty "Status" 
+					$ip4 = $result4 | Select -ExpandProperty "Address" | Select -ExpandProperty "IPAddressToString" | Select -First 1
+					$result = addm "IPv4_IP" $ip4 $results
+					$result = addm "IPv4_Status" $status4 $results
+					$result = addm "IPv4_Error" $err4 $results
 				}
+				
+				if(($IpVersion -eq "6") -or ($IpVersion -eq "Both")) {
+					$err6 = "None"
+					try {
+						$result6 = Test-Connection -TargetName $_ -IPv6 @params
+					}
+					catch {
+						$err6 = $_.Exception.Message
+					}
+					$status6 = $result6 | Select -ExpandProperty "Status" 
+					$ip6 = $result6 | Select -ExpandProperty "Address" | Select -ExpandProperty "IPAddressToString" | Select -First 1
+					$result = addm "IPv6_IP" $ip6 $results
+					$result = addm "IPv6_Status" $status6 $results
+					$result = addm "IPv6_Error" $err6 $results
+				}
+				
+				$results
 			}
+			
 			$comps | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel $script
 		}
 		# Powershell 5.1 requires more code
@@ -97,21 +118,13 @@ function Ping-All {
 	function Do-Stuff {
 		$comps = Get-Comps
 		if($comps) {
-			if($Format) {
-				$results = Get-Results $comps
-				if($results) {
-					Format-Results $results
-				}
-				else {
-					log "No results were returned!"
-				}
+			$results = Get-Results $comps
+			if($PassThru) {
+				$results
 			}
 			else {
-				Get-Results $comps
+				Format-Results $results
 			}
-		}
-		else {
-			log "No matching AD computers found!"
 		}
 	}
 	

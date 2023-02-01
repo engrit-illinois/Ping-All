@@ -48,7 +48,7 @@ When `-PassThru` is specified, the raw, unformatted results are returned, and wi
 ## Example
 A simple request to ping all computers with names starting with a certain string of characters
 ```
-Ping-All dcl-l426-*
+> Ping-All dcl-l426-*
 
 TargetName  IPv4_IP        IPv4_Status                              IPv4_Error IPv6_IP                             IPv6_Status                                                                                                      IPv6_Error
 ----------  -------        -----------                              ---------- -------                             -----------                                                                                                      ----------

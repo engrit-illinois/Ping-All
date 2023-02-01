@@ -3,7 +3,7 @@ Ping-All is a PowerShell module to allow you to ping multiple computers with a s
 
 In the process of upgrading the script to work with IPv6 I removed the ability for it to asynchronously output results as they are gathered. Machines are still pinged asynchronously, but if any machines are offline, the full output will be delayed until pings to those machines time out. I plan to add the full asynchronous behavior back in once I research how to do it properly.  
 
-This module is primarily targeted at PowerShell v7. Support for 5.1 is minimal.  
+This module is primarily targeted at PowerShell v7. Support for 5.1 is minimal and may be removed in the future.  
 
 # Usage
 1. Download `Ping-All.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).

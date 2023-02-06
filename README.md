@@ -33,7 +33,7 @@ Any string _not_ including `*` will be pinged as-given.
 Optional string.  
 Specifies a domain/subdomain to append to all AD-queried names.  
 AD names and FQDNs given explicitly are not appended to.  
-e.g. `Ping-All -Computers "gelib-4c-*" -AppendDomain "ews.illinois.edu"  
+e.g. `Ping-All -Computers "gelib-4c-*" -AppendDomain "ews.illinois.edu"`  
 
 ### -OUDN \<string\>
 Optional string.  

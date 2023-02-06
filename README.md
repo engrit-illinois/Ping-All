@@ -9,12 +9,14 @@ This module is primarily targeted at PowerShell v7. Support for 5.1 is minimal a
 1. Download `Ping-All.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
 2. If using Powershell older than v7, then also download [Test-ConnectionAsync.psm1](https://www.powershellgallery.com/packages/TestConnectionAsync/1.0.0.1) to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
     - Test-ConnectionAsync is by David Wyatt. Use the link above to download from the original source. A copy is kept in this repo in case it becomes unavailable.
-3. Run it, e.g.: `Ping-All -Computers "mel-1001-*","mel-1009-01"`
+3. Run it, e.g.: `Ping-All -Computers "mel-1001-*","mel-1009-01.ews.illinois.edu"`
 
 # Parameters
 
 ### -Computers \<string[]\>
-Required string array of computer names or wildcard computer name queries.  
+Required string array of FQDNs, AD computer names, and/or wildcard AD computer name queries.  
+Any strings including `*` will be treated as a wildcard query for AD computer names.  
+Any string _not_ including `*` will be pinged as-given.  
 
 ### -OUDN \<string\>
 Optional string.  

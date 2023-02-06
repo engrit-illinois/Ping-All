@@ -24,13 +24,22 @@ function Ping-All {
 	
 	function Get-Comps {
 		$comps = @()
-		foreach($query in @($Computers)) {
-			$thisQueryComps = (Get-ADComputer -Filter "name -like '$query'" -SearchBase $OUDN | Select Name).Name
-			$comps += @($thisQueryComps)
+		$Computers | ForEach-Object {
+			if($_ -like "*``**") {
+				log "Searching for AD computers matching `"$_`"..."
+				$thisQueryComps = Get-ADComputer -Filter "name -like '$_'" -SearchBase $OUDN | Select -ExpandProperty "Name"
+				if(-not $thisQueryComps) {
+					log "    No matching AD computers found!"
+				}
+				else {
+					$comps += @($thisQueryComps)
+				}
+			}
+			else {
+				$comps += $_
+			}
 		}
-		if(-not $comps) {
-			log "No matching AD computers found!"
-		}
+		
 		$comps
 	}
 	

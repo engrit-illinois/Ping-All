@@ -29,6 +29,12 @@ Required string array of FQDNs, AD computer names, and/or wildcard AD computer n
 Any strings including `*` will be treated as a wildcard query for AD computer names.  
 Any string _not_ including `*` will be pinged as-given.  
 
+### -AppendDomain \<string\>
+Optional string.  
+Specifies a domain/subdomain to append to all AD-queried names.  
+AD names and FQDNs given explicitly are not appended to.  
+e.g. `Ping-All -Computers "gelib-4c-*" -AppendDomain "ews.illinois.edu"  
+
 ### -OUDN \<string\>
 Optional string.  
 The distinguished name of the OU to limit the computer name search.  

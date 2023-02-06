@@ -6,7 +6,9 @@ function Ping-All {
 		[Parameter(Position=0,Mandatory=$true)]
 		[string[]]$Computers,
 		
-		[string]$OUDN = "OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
+		[string]$AppendDomain,
+		
+		[string]$OUDN = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		
 		[int]$Count = 4,
 		
@@ -32,6 +34,11 @@ function Ping-All {
 					log "    No matching AD computers found!"
 				}
 				else {
+					if($AppendDomain) {
+						$thisQueryComps = $thisQueryComps | ForEach-Object {
+							"$($_).$($AppendDomain)"
+						}
+					}
 					$comps += @($thisQueryComps)
 				}
 			}

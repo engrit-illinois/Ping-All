@@ -11,6 +11,19 @@ This module is primarily targeted at PowerShell v7. Support for 5.1 is minimal a
     - Test-ConnectionAsync is by David Wyatt. Use the link above to download from the original source. A copy is kept in this repo in case it becomes unavailable.
 3. Run it, e.g.: `Ping-All -Computers "mel-1001-*","mel-1009-01.ews.illinois.edu"`
 
+# Examples
+
+Ping multiple sequentially-named FQDNs:
+```powershell
+$lab = "ECEB-9999"
+$nums = @(1..30)
+$comps = $nums | ForEach-Object {
+    $num = ([string]$_).PadLeft(2,"0")
+    "$lab-$num"
+}
+Ping-All $comps
+```
+
 # Parameters
 
 ### -Computers \<string[]\>

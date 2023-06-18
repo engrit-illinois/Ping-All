@@ -8,6 +8,8 @@ function Ping-All {
 		
 		[string]$AppendDomain,
 		
+		[switch]$AppendEwsDomain,
+		
 		[string]$OUDN = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		
 		[int]$Count = 4,
@@ -19,6 +21,8 @@ function Ping-All {
 		
 		[int]$ThrottleLimit = 100
 	)
+	
+	$EWS_DOMAIN = "ews.illinois.edu"
 	
 	function log($msg) {
 		Write-Host $msg
@@ -34,6 +38,11 @@ function Ping-All {
 					log "    No matching AD computers found!"
 				}
 				else {
+					if($AppendEwsDomain) {
+						$thisQueryComps = $thisQueryComps | ForEach-Object {
+							"$($_).$($EWS_DOMAIN)"
+						}
+					}
 					if($AppendDomain) {
 						$thisQueryComps = $thisQueryComps | ForEach-Object {
 							"$($_).$($AppendDomain)"

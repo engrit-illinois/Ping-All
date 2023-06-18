@@ -35,6 +35,11 @@ Specifies a domain/subdomain to append to all AD-queried names.
 AD names and FQDNs given explicitly are not appended to.  
 e.g. `Ping-All -Computers "gelib-4c-*" -AppendDomain "ews.illinois.edu"`  
 
+### -AppendEwsDomain
+Optional switch.  
+Equivalent to `-AppendDomain "ews.illinois.edu"`.  
+Has no effect if `-AppendDomain` is specified.  
+
 ### -OUDN \<string\>
 Optional string.  
 The distinguished name of the OU to limit the computer name search.  

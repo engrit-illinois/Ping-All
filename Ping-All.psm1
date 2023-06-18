@@ -56,10 +56,19 @@ function Ping-All {
 			}
 		}
 		
+		if($comps) {
+			$joinString = "`",`""
+			$compsString = $comps -join $joinString
+			log "    Computers: `"$compsString`"." -L 1
+		}
+		else { log "    No matching AD computer objects found!" -L 1 }
+		
 		$comps
 	}
 	
-	function Get-Results($comps) {			
+	function Get-Results($comps) {
+		log "Pinging computers..."
+		
 		$params = @{
 			Count = $Count
 			ErrorAction = "Stop"

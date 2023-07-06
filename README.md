@@ -24,12 +24,12 @@ Ping-All $comps
 
 Ping all computers in an OU and output results to a CSV:
 ```powershell
-$results = ping-all -Computers "*" -OUDN "OU=EWS,OU=Instructional,OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu" -PassThru
+$results = Ping-All -Computers "*" -OUDN "OU=EWS,OU=Instructional,OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu" -PassThru
 $results | ForEach-Object {
 	$_.IPv4_Status = $_.IPv4_Status -join ", "
 	$_.IPv6_Status = $_.IPv6_Status -join ", "
 }
-$results | Export-Csv -Path "c:\engrit\logs\ping-all-test.csv" -Encoding Ascii -NoTypeInformation
+$results | Export-Csv -Path "c:\engrit\logs\ping-all-test.csv" -Encoding "Ascii" -NoTypeInformation
 ```
 
 # Parameters

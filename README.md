@@ -69,9 +69,10 @@ Optional switch.
 By default the module returns a formatted table of the results after pinging all of the computers.  
 When `-PassThru` is specified, the raw, unformatted results are returned, and will likely be in `List` format.  
 
-## Example
+# Examples
+
 A simple request to ping all computers with names starting with a certain string of characters
-```
+```powershell
 > Ping-All dcl-l426-*
 
 TargetName  IPv4_IP        IPv4_Status                              IPv4_Error IPv6_IP                             IPv6_Status                                                                                                      IPv6_Error
@@ -87,6 +88,16 @@ DCL-L426-08 130.126.246.9  {Success, Success, Success, Success}     None       2
 DCL-L426-09 130.126.246.10 {Success, Success, Success, Success}     None       2620:0:e00:550f:f9a8:6fdc:f911:9528 {Success, Success, Success, Success}                                                                             None
 DCL-L426-10 130.126.246.11 {Success, Success, Success, Success}     None       2620:0:e00:550f:7da2:7a9d:1ba4:567d {Success, Success, Success, Success}                                                                             None
 DCL-L426-11 130.126.246.13 {Success, Success, Success, Success}     None       2620:0:e00:550f:37cb:8c56:b742:a8aa {Success, Success, Success, Success}                                                                             None
+```
+
+Ping all computers in an OU and output results to a CSV:
+```powershell
+$results = ping-all -Computers "*" -OUDN "OU=EWS,OU=Instructional,OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu" -PassThru
+$results | ForEach-Object {
+	$_.IPv4_Status = $_.IPv4_Status -join ", "
+	$_.IPv6_Status = $_.IPv6_Status -join ", "
+}
+$results | Export-Csv -Path "c:\engrit\logs\ping-all-test.csv" -Encoding Ascii -NoTypeInformation
 ```
 
 # Notes

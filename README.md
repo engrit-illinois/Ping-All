@@ -53,7 +53,7 @@ Has no effect if `-AppendDomain` is specified.
 ### -OUDN \<string\>
 Optional string.  
 The distinguished name of the OU to limit the computer name search.  
-Default is `OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu`.  
+Default is `OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu`.  
 
 ### -Count \<int\>
 Optional integer.  

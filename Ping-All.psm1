@@ -29,13 +29,14 @@ function Ping-All {
 	}
 	
 	function Get-Comps {
+		log "Building final list of names to ping..."
 		$comps = @()
 		$Computers | ForEach-Object {
 			if($_ -like "*``**") {
-				log "Searching for AD computers matching `"$_`"..."
+				log "    Searching for AD computers matching `"$_`"..."
 				$thisQueryComps = Get-ADComputer -Filter "name -like '$_'" -SearchBase $OUDN | Select -ExpandProperty "Name"
 				if(-not $thisQueryComps) {
-					log "    No matching AD computers found!"
+					log "        No matching AD computers found!"
 				}
 				else {
 					if($AppendEwsDomain) {
@@ -61,7 +62,7 @@ function Ping-All {
 			$compsString = $comps -join $joinString
 			log "    Computers: `"$compsString`"." -L 1
 		}
-		else { log "    No matching AD computer objects found!" -L 1 }
+		else { log "    Final list is empty!" -L 1 }
 		
 		$comps
 	}

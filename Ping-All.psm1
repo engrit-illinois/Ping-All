@@ -10,6 +10,7 @@ function Ping-All {
 		
 		[switch]$AppendEwsDomain,
 		
+		[Alias("SearchBase")]
 		[string]$OUDN = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		
 		[int]$Count = 4,

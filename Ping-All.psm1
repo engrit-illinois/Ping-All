@@ -10,8 +10,7 @@ function Ping-All {
 		
 		[switch]$AppendEwsDomain,
 		
-		[Alias("SearchBase")]
-		[string]$OUDN = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
+		[string]$SearchBase,
 		
 		[int]$Count = 4,
 		
@@ -35,7 +34,11 @@ function Ping-All {
 		$Computers | ForEach-Object {
 			if($_ -like "*``**") {
 				log "    Searching for AD computers matching `"$_`"..."
-				$thisQueryComps = Get-ADComputer -Filter "name -like '$_'" -SearchBase $OUDN | Select -ExpandProperty "Name"
+				$params = @{
+					Filter = "name -like '$_'"
+				}
+				if($SearchBase) { $params.SearchBase = $SearchBase }
+				$thisQueryComps = Get-ADComputer @params | Select -ExpandProperty "Name"
 				if(-not $thisQueryComps) {
 					log "        No matching AD computers found!"
 				}

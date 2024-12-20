@@ -9,6 +9,10 @@ function Ping-All {
 		[string]$AppendDomain,
 		
 		[switch]$AppendEwsDomain,
+		[string]$EwsDomain = "ews.illinois.edu",
+		
+		[switch]$AppendCbtfDomain,
+		[string]$CbtfDomain = "cbtf.illinois.edu",
 		
 		[string]$SearchBase,
 		
@@ -21,8 +25,6 @@ function Ping-All {
 		
 		[int]$ThrottleLimit = 100
 	)
-	
-	$EWS_DOMAIN = "ews.illinois.edu"
 	
 	function log($msg) {
 		Write-Host $msg
@@ -43,15 +45,22 @@ function Ping-All {
 					log "        No matching AD computers found!"
 				}
 				else {
-					if($AppendEwsDomain) {
-						$thisQueryComps = $thisQueryComps | ForEach-Object {
-							"$($_).$($EWS_DOMAIN)"
-						}
-					}
 					if($AppendDomain) {
 						$thisQueryComps = $thisQueryComps | ForEach-Object {
 							"$($_).$($AppendDomain)"
 						}
+					}
+					elseif($AppendEwsDomain) {
+						$thisQueryComps = $thisQueryComps | ForEach-Object {
+							"$($_).$($EwsDomain)"
+						}
+					}
+					elseif($AppendCbtfDomain) {
+						$thisQueryComps = $thisQueryComps | ForEach-Object {
+							"$($_).$($CbtfDomain)"
+						}
+					}
+					else {
 					}
 					$comps += @($thisQueryComps)
 				}

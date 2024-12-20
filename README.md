@@ -50,6 +50,11 @@ Optional switch.
 Equivalent to `-AppendDomain "ews.illinois.edu"`.  
 Has no effect if `-AppendDomain` is specified.  
 
+### -AppendCbtfDomain
+Optional switch.  
+Equivalent to `-AppendDomain "cbtf.illinois.edu"`.  
+Has no effect if `-AppendDomain` or `-AppendEwsDomain` is specified.  
+
 ### -SearchBase \<string\>
 Optional string.  
 If specified, AD computer name wildcard queries are limited to the given OU DistinguishedName (OUDN).  

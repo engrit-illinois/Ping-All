@@ -22,12 +22,15 @@ function Ping-All {
 		[string]$IpVersion = "Both",
 		
 		[switch]$PassThru,
+		[switch]$Quiet,
 		
 		[int]$ThrottleLimit = 100
 	)
 	
 	function log($msg) {
-		Write-Host $msg
+		if(-not $Quiet) {
+			Write-Host $msg
+		}
 	}
 	
 	function Get-Comps {
@@ -171,7 +174,9 @@ function Ping-All {
 				$results
 			}
 			else {
-				Format-Results $results
+				if(-not $Quiet) {
+					Format-Results $results
+				}
 			}
 		}
 	}

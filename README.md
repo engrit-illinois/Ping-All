@@ -78,6 +78,10 @@ Only relevant when using Powershell 7+.
 The maximum number of async calls to make simultaneously.  
 Default is `100`.  
 
+### -Quiet
+Optional switch.  
+When specified, nothing is output to the console.  
+
 ### -PassThru
 Optional switch.  
 By default the module returns a formatted table of the results after pinging all of the computers.  

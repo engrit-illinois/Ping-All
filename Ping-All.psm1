@@ -18,6 +18,8 @@ function Ping-All {
 		
 		[int]$Count = 4,
 		
+		[int]$TimeoutSeconds,
+		
 		[ValidateScript({($_ -eq "4") -or ($_ -eq "6") -or ($_ -eq "Both")})]
 		[string]$IpVersion = "Both",
 		
@@ -90,6 +92,7 @@ function Ping-All {
 			Count = $Count
 			ErrorAction = "Stop"
 		}
+		if($TimeoutSeconds) { $params.TimeoutSeconds = $TimeoutSeconds }
 		
 		# Powershell 7 has a simple -Parallel parameter for the ForEach-Object cmdlet
 		if((Get-Host).Version.Major -ge 7) {

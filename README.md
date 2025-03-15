@@ -61,9 +61,14 @@ If specified, AD computer name wildcard queries are limited to the given OU Dist
 
 ### -Count \<int\>
 Optional integer.  
-The number of times to ping machines.  
+The number of times to attempt to ping the target machines.  
 Machines which respond to at least one ping will be considered a success.  
 Default is `4`.  
+
+### -TimeoutSeconds \<int\>
+Optional integer.  
+The number of seconds to wait for each ping before timing out and moving onto the next attempt.  
+Default is the default for `Test-Connection`, which is `5`.  
 
 ### -IpVersion \<int\>
 Optional integer.  

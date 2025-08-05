@@ -42,18 +42,20 @@ Any string _not_ including `*` will be pinged as-given.
 ### -AppendDomain \<string\>
 Optional string.  
 Specifies a domain/subdomain to append to all AD-queried names.  
-AD names and FQDNs given explicitly are not appended to.  
+AD names and FQDNs given explicitly (i.e. those which do not include `*`) are not appended to.  
 e.g. `Ping-All -Computers "gelib-4c-*" -AppendDomain "ews.illinois.edu"`  
 
 ### -AppendEwsDomain
 Optional switch.  
 Equivalent to `-AppendDomain "ews.illinois.edu"`.  
 Has no effect if `-AppendDomain` is specified.  
+AD names and FQDNs given explicitly (i.e. those which do not include `*`) are not appended to.  
 
 ### -AppendCbtfDomain
 Optional switch.  
 Equivalent to `-AppendDomain "cbtf.illinois.edu"`.  
 Has no effect if `-AppendDomain` or `-AppendEwsDomain` is specified.  
+AD names and FQDNs given explicitly (i.e. those which do not include `*`) are not appended to.  
 
 ### -SearchBase \<string\>
 Optional string.  

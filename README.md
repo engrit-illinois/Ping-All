@@ -24,7 +24,7 @@ Ping-All $comps
 
 Ping all computers in an OU and output results to a CSV:
 ```powershell
-$results = Ping-All -Computers "*" -OUDN "OU=EWS,OU=Instructional,OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu" -PassThru
+$results = Ping-All -AdComputers "*" -OUDN "OU=EWS,OU=Instructional,OU=Desktops,OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu" -PassThru
 $results | ForEach-Object {
 	$_.IPv4_Status = $_.IPv4_Status -join ", "
 	$_.IPv6_Status = $_.IPv6_Status -join ", "
@@ -34,28 +34,39 @@ $results | Export-Csv -Path "c:\engrit\logs\ping-all-test.csv" -Encoding "Ascii"
 
 # Parameters
 
-### -Computers \<string[]\>
-Required string array of FQDNs, AD computer names, and/or wildcard AD computer name queries.  
+### -AdComputers \<string[]\>
+Optional string array of AD computer names and/or wildcard AD computer name queries.  
 Any strings including `*` will be treated as a wildcard query for AD computer names.  
-Any string _not_ including `*` will be pinged as-given.  
+All array members will be searched for in AD and only pinged if a match is found.  
+Assumed as the first argument if the parameter name is ommitted.  
+
+### -Hostnames \<string[]\>
+Optional string array of hostnames to ping as-given.  
+Assumed as the second argument if the parameter names are ommitted.  
 
 ### -AppendDomain \<string\>
 Optional string.  
 Specifies a domain/subdomain to append to all AD-queried names.  
-AD names and FQDNs given explicitly (i.e. those which do not include `*`) are not appended to.  
-e.g. `Ping-All -Computers "gelib-4c-*" -AppendDomain "ews.illinois.edu"`  
+e.g. `Ping-All -AdComputers "gelib-4c-*" -AppendDomain "ews.illinois.edu"`  
 
 ### -AppendEwsDomain
 Optional switch.  
 Equivalent to `-AppendDomain "ews.illinois.edu"`.  
 Has no effect if `-AppendDomain` is specified.  
-AD names and FQDNs given explicitly (i.e. those which do not include `*`) are not appended to.  
 
 ### -AppendCbtfDomain
 Optional switch.  
 Equivalent to `-AppendDomain "cbtf.illinois.edu"`.  
 Has no effect if `-AppendDomain` or `-AppendEwsDomain` is specified.  
-AD names and FQDNs given explicitly (i.e. those which do not include `*`) are not appended to.  
+
+### -PingRawAndAppended
+Optional switch.  
+Normally if `-AppendDomain` or its variants are specified, the appended names are pinged and the raw names given by `-AdComputers` are not pinged.  
+Specify this switch to ping the raw given names in addition to the appended names.  
+Has no effect if `-AppendDomain` and its variants are not specified.  
+Useful to troubleshoot issues with AD DNS, when your AD computer names are equal to the host portion of their associated non-AD DNS hostnames.  
+I.e. if AD computer `MEL-1000-01` (a.k.a. `mel-1000-01.ad.uillinois.edu`) has a regular DNS A record of `mel-1000-01.ews.illinois.edu`, then this parameter allows you to ping both, without having to also specify the regular DNS hostname in the `-Hostnames` parameter.  
+E.g. `Ping-All "mel-1000-*" -AppendDomain "ews.illinois.edu" -PingRawAndAppended`  
 
 ### -SearchBase \<string\>
 Optional string.  

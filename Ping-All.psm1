@@ -3,8 +3,11 @@
 # By mseng3
 function Ping-All {
 	param(
-		[Parameter(Position=0,Mandatory=$true)]
-		[string[]]$Computers,
+		[Parameter(Position=0)]
+		[string[]]$AdComputers,
+		
+		[Parameter(Position=1)]
+		[string[]]$Hostnames,
 		
 		[string]$AppendDomain,
 		
@@ -13,6 +16,8 @@ function Ping-All {
 		
 		[switch]$AppendCbtfDomain,
 		[string]$CbtfDomain = "cbtf.illinois.edu",
+		
+		[switch]$PingRawAndAppended,
 		
 		[string]$SearchBase,
 		
@@ -35,44 +40,62 @@ function Ping-All {
 		}
 	}
 	
+	function Validate-Input {
+		if(
+			(-not $AdComputers) -and
+			(-not $Hostnames)
+		) {
+			Throw "You must specify parameters -AdComputers, -Hostnames, or both!"
+		}
+	}
+	
 	function Get-Comps {
 		log "Building final list of names to ping..."
 		$comps = @()
-		$Computers | ForEach-Object {
-			if($_ -like "*``**") {
+		
+		if($AdComputers) {
+			$AdComputers | ForEach-Object {
 				log "    Searching for AD computers matching `"$_`"..."
 				$params = @{
 					Filter = "name -like '$_'"
 				}
 				if($SearchBase) { $params.SearchBase = $SearchBase }
 				$thisQueryComps = Get-ADComputer @params | Select -ExpandProperty "Name"
+				
 				if(-not $thisQueryComps) {
 					log "        No matching AD computers found!"
 				}
 				else {
-					if($AppendDomain) {
-						$thisQueryComps = $thisQueryComps | ForEach-Object {
+					# If -AppendDomain was not specified, check if the other append domain parameters were specified and set one as $AppendDomain
+					if(-not $AppendDomain) {
+						if($AppendEwsDomain) { $AppendDomain = $EwsDomain }
+						elseif($AppendCbtfDomain) { $AppendDomain = $CbtfDomain }
+						else { }
+					}
+					
+					# If $AppendDomain still isn't specified, use only the raw names returned from AD
+					if(-not $AppendDomain) {
+						$comps += @($thisQueryComps)
+					}
+					# Otherwise use only the raw names returned from AD appended with the desired (sub)domain
+					else {
+						$thisQueryCompsAppended = $thisQueryComps | ForEach-Object {
 							"$($_).$($AppendDomain)"
 						}
-					}
-					elseif($AppendEwsDomain) {
-						$thisQueryComps = $thisQueryComps | ForEach-Object {
-							"$($_).$($EwsDomain)"
+						$comps += @($thisQueryCompsAppended)
+						
+						# And if -PingRawAndAppended was specified then use the raw names as well
+						if($PingRawAndAppended) {
+							$comps += @($thisQueryComps)
 						}
 					}
-					elseif($AppendCbtfDomain) {
-						$thisQueryComps = $thisQueryComps | ForEach-Object {
-							"$($_).$($CbtfDomain)"
-						}
-					}
-					else {
-					}
-					$comps += @($thisQueryComps)
 				}
 			}
-			else {
-				$comps += $_
-			}
+		}
+		
+		# Use whatever was given for the -Hostname parameter exactly as is
+		if($Hostnames) {
+			$comps += @($Hostnames)
 		}
 		
 		if($comps) {
@@ -82,7 +105,7 @@ function Ping-All {
 		}
 		else { log "    Final list is empty!" -L 1 }
 		
-		$comps
+		$comps | Sort
 	}
 	
 	function Get-Results($comps) {
@@ -170,6 +193,7 @@ function Ping-All {
 	}
 	
 	function Do-Stuff {
+		Validate-Input
 		$comps = Get-Comps
 		if($comps) {
 			$results = Get-Results $comps
